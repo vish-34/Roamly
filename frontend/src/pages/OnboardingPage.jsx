@@ -24,6 +24,8 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
       id: 'everest',
       title: 'Everest Escape',
       price: '$950',
+      priceNum: 950,
+      durationDays: 7,
       tag: 'Top rated',
       tagColor: 'bg-white/20 text-white',
       days: '7 days',
@@ -35,6 +37,8 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
       id: 'annapurna',
       title: 'Annapurna Trail',
       price: '$750',
+      priceNum: 750,
+      durationDays: 6,
       tag: 'Popular',
       tagColor: 'bg-blue-600/70 text-white',
       days: '6 days',
@@ -46,6 +50,8 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
       id: 'pokhara',
       title: 'Pokhara Retreat',
       price: '$540',
+      priceNum: 540,
+      durationDays: 4,
       tag: 'Relax',
       tagColor: 'bg-emerald-600/70 text-white',
       days: '4 days',
@@ -58,6 +64,8 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
       id: 'kathmandu',
       title: 'Kathmandu Soul',
       price: '$410',
+      priceNum: 410,
+      durationDays: 3,
       tag: 'Curated',
       tagColor: 'bg-amber-600/70 text-white',
       days: '3 days',
@@ -69,6 +77,8 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
       id: 'himalayan',
       title: 'Himalayan Escape',
       price: '$890',
+      priceNum: 890,
+      durationDays: 5,
       tag: 'Trek',
       tagColor: 'bg-purple-600/70 text-white',
       days: '5 days',
@@ -92,8 +102,20 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
     }
   };
 
-  const handlePlanTour = (destination) => {
-    onOpenCreateTrip();
+  const handlePlanTour = (tour) => {
+    const today = new Date();
+    const duration = tour.durationDays || 5;
+    const endDate = new Date(Date.now() + duration * 24 * 60 * 60 * 1000);
+
+    onOpenCreateTrip({
+      name: tour.title,
+      destination: tour.destination,
+      totalBudget: tour.priceNum || 1000,
+      currency: 'USD',
+      startDate: today.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0],
+      durationDays: duration
+    });
   };
 
   return (
@@ -128,7 +150,13 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
 
           <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up delay-300">
             <button
-              onClick={onOpenCreateTrip}
+              onClick={() => onOpenCreateTrip({
+                name: 'Nepal Discovery Journey',
+                destination: 'Kathmandu & Pokhara, Nepal',
+                totalBudget: 1200,
+                currency: 'USD',
+                durationDays: 6
+              })}
               className="px-8 py-4 rounded-full bg-white hover:bg-stone-100 hover:scale-105 active:scale-95 text-slate-950 font-semibold text-sm sm:text-base transition-all duration-300 shadow-2xl hover:shadow-white/25 cursor-pointer"
             >
               Build my trip now
@@ -172,7 +200,7 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
               return (
                 <div
                   key={tour.id}
-                  onClick={() => handlePlanTour(tour.destination)}
+                  onClick={() => handlePlanTour(tour)}
                   className="group relative w-[280px] sm:w-[305px] h-[460px] sm:h-[480px] rounded-3xl overflow-hidden shrink-0 shadow-lg border border-stone-200/50 cursor-pointer snap-center smooth-card scale-100 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl z-10 hover:z-20 ease-out"
                 >
                   {/* Card Background Image */}
@@ -214,7 +242,7 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handlePlanTour(tour.destination);
+                        handlePlanTour(tour);
                       }}
                       className="w-full py-3 rounded-full bg-white hover:bg-stone-100 active:scale-95 text-slate-950 font-bold text-xs tracking-wider uppercase transition-all shadow-md group-hover:shadow-lg text-center cursor-pointer"
                     >
@@ -300,7 +328,13 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
             </div>
 
             <button
-              onClick={onOpenCreateTrip}
+              onClick={() => onOpenCreateTrip({
+                name: 'Himalayan Tailor-Made Tour',
+                destination: 'Himalayas, Nepal',
+                totalBudget: 1500,
+                currency: 'USD',
+                durationDays: 7
+              })}
               className="mt-8 w-full py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 text-white font-semibold text-xs tracking-wider uppercase transition-all border border-white/15 cursor-pointer"
             >
               Tailor-Made

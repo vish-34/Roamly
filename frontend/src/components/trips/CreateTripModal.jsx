@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   MapPin, 
@@ -14,7 +14,7 @@ import {
 import Modal from '../common/Modal';
 import { useTripContext } from '../../context/TripContext';
 
-export default function CreateTripModal({ isOpen, onClose }) {
+export default function CreateTripModal({ isOpen, onClose, initialData = null }) {
   const { createTrip } = useTripContext();
   const navigate = useNavigate();
 
@@ -29,6 +29,29 @@ export default function CreateTripModal({ isOpen, onClose }) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Update formData whenever initialData or isOpen changes
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        name: initialData.name || '',
+        destination: initialData.destination || '',
+        startDate: initialData.startDate || new Date().toISOString().split('T')[0],
+        endDate: initialData.endDate || new Date(Date.now() + (initialData.durationDays || 5) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        totalBudget: initialData.totalBudget !== undefined ? initialData.totalBudget : 1500,
+        currency: initialData.currency || 'USD'
+      });
+    } else if (isOpen) {
+      setFormData({
+        name: '',
+        destination: '',
+        startDate: new Date().toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        totalBudget: 1500,
+        currency: 'USD'
+      });
+    }
+  }, [initialData, isOpen]);
 
   // Quick suggestions matching web tours (compact single line)
   const suggestedDestinations = [
