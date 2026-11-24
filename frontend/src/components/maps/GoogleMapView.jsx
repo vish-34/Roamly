@@ -41,26 +41,29 @@ const CITY_COORDINATES = {
   thailand: { lat: 15.8700, lng: 100.9925, zoom: 6 }
 };
 
-// Available genuine tile layers
+// Geoapify API Key from environment or fallback
+const GEOAPIFY_KEY = import.meta.env.VITE_GEOAPIFY_API_KEY || 'f77c6b7f278746758e789e5220c76b42';
+
+// Available genuine tile layers without restrictive watermarks
 const MAP_THEMES = {
-  voyager: {
+  editorial: {
     name: 'Editorial',
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
+    url: `https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=${GEOAPIFY_KEY}`,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://www.geoapify.com/">Geoapify</a>',
+    subdomains: '',
+    maxZoom: 20
   },
-  street: {
-    name: 'Standard',
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    subdomains: 'abc',
-    maxZoom: 19
+  minimal: {
+    name: 'Monochrome',
+    url: `https://maps.geoapify.com/v1/tile/positron/{z}/{x}/{y}.png?apiKey=${GEOAPIFY_KEY}`,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://www.geoapify.com/">Geoapify</a>',
+    subdomains: '',
+    maxZoom: 20
   },
   satellite: {
     name: 'Satellite',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP',
+    attribution: 'Tiles &copy; Esri &mdash; Earthstar Geographics',
     subdomains: '',
     maxZoom: 18
   }
@@ -87,7 +90,7 @@ export default function GoogleMapView({
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState('voyager');
+  const [currentTheme, setCurrentTheme] = useState('editorial');
   const [mapCenterCoords, setMapCenterCoords] = useState({ lat: 35.6762, lng: 139.6503, zoom: 12 });
   const [clickedLocation, setClickedLocation] = useState(null);
 
@@ -125,7 +128,7 @@ export default function GoogleMapView({
     });
 
     // Add Tile Layer
-    const themeConfig = MAP_THEMES[currentTheme] || MAP_THEMES.voyager;
+    const themeConfig = MAP_THEMES[currentTheme] || MAP_THEMES.editorial;
     const tileLayer = L.tileLayer(themeConfig.url, {
       attribution: themeConfig.attribution,
       subdomains: themeConfig.subdomains,
@@ -219,7 +222,7 @@ export default function GoogleMapView({
   // 2. Switch Tile Layers when theme changes
   useEffect(() => {
     if (!mapInstanceRef.current || !tileLayerRef.current) return;
-    const themeConfig = MAP_THEMES[currentTheme] || MAP_THEMES.voyager;
+    const themeConfig = MAP_THEMES[currentTheme] || MAP_THEMES.editorial;
     tileLayerRef.current.setUrl(themeConfig.url);
   }, [currentTheme]);
 
