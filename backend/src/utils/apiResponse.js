@@ -3,7 +3,7 @@ function success(data, message = 'Operation completed successfully') {
 }
 
 function failure(message, details) {
-  return { success: false, error: { message, details } };
+  return { success: false, data: null, message, error: { message, details } };
 }
 
 module.exports = { success, failure };

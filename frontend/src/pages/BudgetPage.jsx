@@ -34,16 +34,16 @@ export default function BudgetPage() {
   }
 
   const activities = currentTrip.activities || [];
-  const totalBudget = currentTrip.totalBudget || 0;
-  const totalEstimated = currentTrip.totalEstimatedExpenses || 0;
-  const totalActual = currentTrip.totalActualExpenses || 0;
-  const remaining = currentTrip.remainingBudget !== undefined ? currentTrip.remainingBudget : (totalBudget - totalActual);
-  const utilization = currentTrip.budgetUtilizationPercent || 0;
-  const variance = currentTrip.spendingVariance || 0;
-  const projectedRemaining = currentTrip.projectedBudgetRemaining !== undefined 
+  const totalBudget = currentTrip.budget?.totalBudget ?? currentTrip.totalBudget ?? 0;
+  const totalEstimated = currentTrip.budget?.totalEstimated ?? currentTrip.totalEstimatedExpenses ?? 0;
+  const totalActual = currentTrip.budget?.totalActual ?? currentTrip.totalActualExpenses ?? 0;
+  const remaining = currentTrip.budget?.remainingBudget ?? (currentTrip.remainingBudget !== undefined ? currentTrip.remainingBudget : (totalBudget - totalActual));
+  const utilization = currentTrip.budget?.utilizationPercentage ?? currentTrip.budgetUtilizationPercent ?? 0;
+  const variance = currentTrip.budget?.variance ?? (currentTrip.spendingVariance || 0);
+  const projectedRemaining = currentTrip.budget?.projectedRemaining ?? (currentTrip.projectedBudgetRemaining !== undefined 
     ? currentTrip.projectedBudgetRemaining 
-    : (totalBudget - totalEstimated);
-  const isOverBudget = currentTrip.isOverBudget || (totalActual > totalBudget);
+    : (totalBudget - totalEstimated));
+  const isOverBudget = currentTrip.budget?.isOverBudget ?? (currentTrip.isOverBudget || (totalActual > totalBudget));
 
   const status = getBudgetStatus(utilization);
 

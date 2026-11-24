@@ -1,229 +1,428 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Plane, 
-  Ticket, 
-  MapPin, 
   ArrowRight, 
+  ArrowLeft, 
+  Compass, 
+  MapPin, 
+  Calendar, 
   Sparkles, 
   ShieldCheck, 
-  Compass, 
-  Coins 
+  ChevronRight,
+  TrendingUp,
+  Layers,
+  Star
 } from 'lucide-react';
 import { useTripContext } from '../context/TripContext';
 
 export default function OnboardingPage({ onOpenCreateTrip }) {
-  const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
   const { trips } = useTripContext();
 
-  const slides = [
+  const tours = [
     {
-      step: '1 of 3',
-      title: 'Find your next adventure',
-      description: 'Discover cities, nature and hidden gems. Choose a destination to start your next trip.',
-      photo1: {
-        title: 'Paris, France',
-        img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=80',
-        tilt: '-rotate-6 hover:-rotate-3'
-      },
-      photo2: {
-        title: 'Kyoto, Japan',
-        img: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80',
-        tilt: 'rotate-6 hover:rotate-3'
-      },
-      sticker1: { icon: Plane, label: 'Explore', color: 'bg-blue-600 text-white' },
-      sticker2: { icon: Ticket, label: 'Pass', color: 'bg-amber-700 text-white' },
-      quickDestinations: ['Paris', 'Kyoto', 'Rome', 'New York', 'Bali']
+      id: 'everest',
+      title: 'Everest Escape',
+      price: '$950',
+      tag: 'Top rated',
+      tagColor: 'bg-white/20 text-white',
+      days: '7 days',
+      destination: 'Everest Base, Nepal',
+      description: 'Trek through majestic mountain passes, ascending iconic trails into the high Himalayas.',
+      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80'
     },
     {
-      step: '2 of 3',
-      title: 'Master your travel budget',
-      description: 'Real-time estimated vs actual expense tracking. Never get surprised by unexpected costs.',
-      photo1: {
-        title: 'Santorini, Greece',
-        img: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=600&q=80',
-        tilt: '-rotate-3 hover:rotate-0'
-      },
-      photo2: {
-        title: 'Swiss Alps',
-        img: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=600&q=80',
-        tilt: 'rotate-4 hover:rotate-1'
-      },
-      sticker1: { icon: Coins, label: 'Track', color: 'bg-emerald-600 text-white' },
-      sticker2: { icon: ShieldCheck, label: 'Verified', color: 'bg-purple-600 text-white' },
-      quickDestinations: ['Zurich', 'Reykjavik', 'London', 'Barcelona', 'Vancouver']
+      id: 'annapurna',
+      title: 'Annapurna Trail',
+      price: '$750',
+      tag: 'Popular',
+      tagColor: 'bg-blue-600/70 text-white',
+      days: '6 days',
+      destination: 'Annapurna Circuit, Nepal',
+      description: 'Follow scenic mountain trails through peaceful villages, ancient paths and valleys.',
+      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'
     },
     {
-      step: '3 of 3',
-      title: 'AI itineraries & documents',
-      description: 'Generate day-wise smart itineraries with Groq AI and keep your tickets safely stored.',
-      photo1: {
-        title: 'Dubai, UAE',
-        img: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=600&q=80',
-        tilt: '-rotate-4 hover:rotate-0'
-      },
-      photo2: {
-        title: 'Amalfi Coast, Italy',
-        img: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=600&q=80',
-        tilt: 'rotate-5 hover:rotate-2'
-      },
-      sticker1: { icon: Sparkles, label: 'AI Ready', color: 'bg-indigo-600 text-white' },
-      sticker2: { icon: Compass, label: 'Guides', color: 'bg-brand-500 text-white' },
-      quickDestinations: ['Amalfi', 'Dubai', 'Tokyo', 'Singapore', 'Cape Town']
+      id: 'pokhara',
+      title: 'Pokhara Retreat',
+      price: '$540',
+      tag: 'Relax',
+      tagColor: 'bg-emerald-600/70 text-white',
+      days: '4 days',
+      destination: 'Pokhara & Phewa Lake, Nepal',
+      description: 'Slow down beside the peaceful lake, surrounded by green hills, distant peaks and tranquility.',
+      image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80',
+      featured: true
+    },
+    {
+      id: 'kathmandu',
+      title: 'Kathmandu Soul',
+      price: '$410',
+      tag: 'Curated',
+      tagColor: 'bg-amber-600/70 text-white',
+      days: '3 days',
+      destination: 'Kathmandu Valley, Nepal',
+      description: 'Walk through ancient temples, hidden alleys and colorful bazaars filled with living culture.',
+      image: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+      id: 'himalayan',
+      title: 'Himalayan Escape',
+      price: '$890',
+      tag: 'Trek',
+      tagColor: 'bg-purple-600/70 text-white',
+      days: '5 days',
+      destination: 'Langtang Valley, Nepal',
+      description: 'Venture through snow-capped valleys, alpine pine forests and quiet mountain monasteries.',
+      image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'
     }
   ];
 
-  const slide = slides[currentStep];
+  const [activeTourIndex, setActiveTourIndex] = useState(2); // Center on Pokhara Retreat
 
-  const handleNext = () => {
-    if (currentStep < slides.length - 1) {
-      setCurrentStep(prev => prev + 1);
-    } else {
-      if (trips.length > 0) {
-        navigate('/trips');
-      } else {
-        onOpenCreateTrip();
-      }
-    }
+  const handlePrevTour = () => {
+    setActiveTourIndex(prev => (prev === 0 ? tours.length - 1 : prev - 1));
   };
 
-  const handleSkip = () => {
-    if (trips.length > 0) {
-      navigate('/trips');
-    } else {
-      onOpenCreateTrip();
-    }
+  const handleNextTour = () => {
+    setActiveTourIndex(prev => (prev === tours.length - 1 ? 0 : prev + 1));
+  };
+
+  const handlePlanTour = (destination) => {
+    onOpenCreateTrip();
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-8 px-4 sm:px-6">
-      {/* Inspired Mobile/App Card Canvas */}
-      <div className="relative w-full max-w-md bg-white rounded-4xl shadow-2xl border border-stone-200/90 overflow-hidden p-6 sm:p-8 flex flex-col justify-between min-h-[640px]">
+    <div className="min-h-screen bg-[#FDFCF9] text-slate-900 selection:bg-slate-900 selection:text-white">
+      
+      {/* 1. CINEMATIC HERO SECTION */}
+      <section className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden">
         
-        {/* Top Header: Step & Skip */}
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
-          <span className="bg-stone-100 px-3 py-1 rounded-full text-slate-700 tracking-wide">
-            {slide.step}
-          </span>
-          <button 
-            onClick={handleSkip}
-            className="hover:text-brand-600 transition-colors cursor-pointer"
-          >
-            Skip
-          </button>
+        {/* Full-bleed Majestic Mountain Landscape Background */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2400&q=90" 
+            alt="Majestic Mountain Range" 
+            className="w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-out"
+          />
+          {/* Gradient overlays for cinematic depth and high text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/85" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent h-48 bottom-0" />
         </div>
 
-        {/* Visual Scene Area with Stickers & Polaroid Photos */}
-        <div className="relative h-72 w-full my-auto flex items-center justify-center">
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 sm:pt-40 pb-20 text-center flex-1 flex flex-col items-center justify-center">
           
-          {/* Dashed orange trail in background */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 350 250">
-            <path 
-              d="M 30,190 Q 140,80 180,140 T 320,60" 
-              fill="none" 
-              stroke="#fb923c" 
-              strokeWidth="2.5" 
-              strokeDasharray="6,6"
-              strokeLinecap="round"
-            />
-          </svg>
-
-          {/* Left Polaroid Photo Card */}
-          <div className={`absolute left-2 top-4 w-36 sm:w-40 bg-white p-2 rounded-2xl shadow-xl border border-stone-100 transition-all duration-300 ${slide.photo1.tilt}`}>
-            <img 
-              src={slide.photo1.img} 
-              alt={slide.photo1.title} 
-              className="w-full h-32 sm:h-36 object-cover rounded-xl"
-            />
-            <p className="text-[11px] font-bold text-slate-800 text-center mt-2 tracking-tight">
-              {slide.photo1.title}
-            </p>
-          </div>
-
-          {/* Airplane / Theme Sticker with peel effect */}
-          <div className="absolute left-20 top-0 transform -translate-y-2 z-10">
-            <div className={`w-12 h-12 rounded-full ${slide.sticker1.color} flex items-center justify-center shadow-lg border-2 border-white transform -rotate-12 transition-transform hover:scale-110 cursor-pointer`}>
-              <slide.sticker1.icon className="w-6 h-6" />
-            </div>
-          </div>
-
-          {/* Right Polaroid Photo Card */}
-          <div className={`absolute right-2 bottom-4 w-36 sm:w-40 bg-white p-2 rounded-2xl shadow-xl border border-stone-100 transition-all duration-300 ${slide.photo2.tilt}`}>
-            <img 
-              src={slide.photo2.img} 
-              alt={slide.photo2.title} 
-              className="w-full h-32 sm:h-36 object-cover rounded-xl"
-            />
-            <p className="text-[11px] font-bold text-slate-800 text-center mt-2 tracking-tight">
-              {slide.photo2.title}
-            </p>
-          </div>
-
-          {/* Ticket / Secondary Sticker */}
-          <div className="absolute right-24 top-6 z-10">
-            <div className={`w-11 h-11 rounded-full ${slide.sticker2.color} flex items-center justify-center shadow-lg border-2 border-white transform rotate-12 transition-transform hover:scale-110 cursor-pointer`}>
-              <slide.sticker2.icon className="w-5 h-5" />
-            </div>
-          </div>
-
-        </div>
-
-        {/* Content Section: Title & Description */}
-        <div className="text-center mt-4 mb-3">
-          <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight leading-snug">
-            {slide.title}
+          <h1 className="font-display font-medium text-4xl sm:text-6xl md:text-7xl lg:text-[80px] text-white tracking-tight leading-[1.08] drop-shadow-md">
+            Roamly <span className="font-serif italic font-normal tracking-normal text-amber-200">Without Limits.</span><br />
+            Discover beyond the ordinary.
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-2 px-3 leading-relaxed">
-            {slide.description}
+
+          <p className="max-w-2xl text-stone-200 text-sm sm:text-base md:text-lg mt-6 font-light leading-relaxed drop-shadow-sm">
+            Journeys shaped around you — your pace, your path, your sense of wonder.
+            Every experience feels personal, effortless, and truly yours.
           </p>
 
-          {/* Quick Destination Pill Tags */}
-          <div className="flex flex-wrap justify-center gap-1.5 mt-4">
-            {slide.quickDestinations.map((dest) => (
-              <span 
-                key={dest} 
-                className="inline-flex items-center text-[10px] font-semibold bg-stone-100 hover:bg-brand-50 hover:text-brand-600 text-slate-600 px-2.5 py-1 rounded-full transition-colors cursor-pointer"
-                onClick={onOpenCreateTrip}
+          <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
+            <button
+              onClick={onOpenCreateTrip}
+              className="px-8 py-4 rounded-full bg-white hover:bg-stone-100 active:scale-95 text-slate-950 font-semibold text-sm sm:text-base transition-all duration-300 shadow-2xl hover:shadow-white/20 cursor-pointer"
+            >
+              Build my trip now
+            </button>
+
+            {trips.length > 0 && (
+              <button
+                onClick={() => navigate('/trips')}
+                className="px-6 py-4 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-sm backdrop-blur-md transition-all border border-white/20 cursor-pointer flex items-center gap-2"
               >
-                <MapPin className="w-2.5 h-2.5 mr-1 text-brand-500" />
-                {dest}
-              </span>
-            ))}
+                <span>View My {trips.length} Trips</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+        </div>
+
+        {/* Ambient bottom curve divider */}
+        <div className="relative z-10 h-12 bg-gradient-to-t from-[#FDFCF9] to-transparent w-full" />
+      </section>
+
+
+      {/* 2. DISCOVER OUR MOST POPULAR TOURS CAROUSEL */}
+      <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        
+        {/* Section Tag & Headline */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-slate-500 bg-stone-100 px-4 py-1.5 rounded-full border border-stone-200/60 mb-4">
+            Your Journey
+          </span>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-slate-900 tracking-tight font-normal">
+            Discover <span className="font-serif italic font-normal text-slate-950">Our Most</span> Popular Tours
+          </h2>
+        </div>
+
+        {/* 5-Card Horizontal Stack / Showcase */}
+        <div className="relative flex items-center justify-center py-6 overflow-hidden">
+          <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-6 px-4 snap-x">
+            {tours.map((tour, index) => {
+              const isCenter = index === activeTourIndex;
+
+              return (
+                <div
+                  key={tour.id}
+                  onClick={() => setActiveTourIndex(index)}
+                  className={`group relative rounded-3xl overflow-hidden shrink-0 transition-all duration-500 cursor-pointer snap-center ${
+                    isCenter 
+                      ? 'w-[280px] sm:w-[320px] h-[460px] sm:h-[490px] shadow-2xl ring-2 ring-slate-900/10 scale-105 z-20' 
+                      : 'w-[240px] sm:w-[270px] h-[410px] sm:h-[440px] opacity-75 hover:opacity-100 hover:scale-98 z-10'
+                  }`}
+                >
+                  {/* Card Background Image */}
+                  <img 
+                    src={tour.image} 
+                    alt={tour.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
+
+                  {/* Card Content Overlay */}
+                  <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
+                    
+                    {/* Header info: Title & Price */}
+                    <div className="flex items-baseline justify-between gap-2 mb-2">
+                      <h3 className="font-display font-bold text-xl sm:text-2xl tracking-tight text-white">
+                        {tour.title}
+                      </h3>
+                      <span className="font-display font-bold text-sm text-amber-300">
+                        {tour.price}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-stone-300 line-clamp-2 font-light mb-4">
+                      {tour.description}
+                    </p>
+
+                    {/* Metadata Tags */}
+                    <div className="flex items-center gap-2 mb-5">
+                      <span className={`text-[10px] font-bold px-3 py-1 rounded-full backdrop-blur-md ${tour.tagColor}`}>
+                        {tour.tag}
+                      </span>
+                      <span className="text-[10px] font-medium px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-stone-200">
+                        {tour.days}
+                      </span>
+                    </div>
+
+                    {/* Action Button: Explore */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlanTour(tour.destination);
+                      }}
+                      className="w-full py-3 rounded-full bg-white hover:bg-stone-100 active:scale-98 text-slate-950 font-bold text-xs tracking-wider uppercase transition-all shadow-lg text-center cursor-pointer"
+                    >
+                      Explore
+                    </button>
+
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Bottom Pagination & Action Button */}
-        <div className="mt-4 space-y-4">
-          
-          {/* Progress Indicators (Pill bar + Dots) */}
-          <div className="flex items-center justify-center gap-1.5">
-            {slides.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentStep(idx)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  idx === currentStep 
-                    ? 'w-6 bg-brand-500' 
-                    : 'w-2 bg-stone-200 hover:bg-stone-300'
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Primary Action Button */}
-          <button
-            onClick={handleNext}
-            className="w-full py-3.5 px-6 rounded-2xl bg-brand-500 hover:bg-brand-600 active:scale-98 text-white font-semibold text-base shadow-pill flex items-center justify-center gap-2 transition-all cursor-pointer"
+        {/* Navigation Buttons: (←) View More Tours (→) */}
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <button 
+            onClick={handlePrevTour}
+            className="w-12 h-12 rounded-full border border-stone-300 hover:border-slate-800 hover:bg-stone-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Previous tour"
           >
-            <span>{currentStep === slides.length - 1 ? 'Start Planning' : 'Next'}</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowLeft className="w-5 h-5" />
           </button>
 
+          <span className="text-sm font-semibold text-slate-800 px-4">
+            View More Tours
+          </span>
+
+          <button 
+            onClick={handleNextTour}
+            className="w-12 h-12 rounded-full border border-stone-300 hover:border-slate-800 hover:bg-stone-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            aria-label="Next tour"
+          >
+            <ArrowRight className="w-5 h-5" />
+          </button>
         </div>
 
-      </div>
+      </section>
+
+
+      {/* 3. BENTO GRID / ABOUT ROAMLY SECTION */}
+      <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-stone-200/80">
+        
+        {/* Header split */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+          <div className="lg:col-span-4">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-slate-500 bg-stone-100 px-4 py-1.5 rounded-full border border-stone-200/60 mb-3">
+              About Roamly
+            </span>
+          </div>
+
+          <div className="lg:col-span-8">
+            <h3 className="font-display text-2xl sm:text-3xl md:text-4xl text-slate-900 font-normal leading-snug">
+              Roamly is more than a destination — it's a journey. From Himalayan peaks to ancient cities, every experience brings you closer to its nature, culture and people.
+            </h3>
+          </div>
+        </div>
+
+        {/* 3-Column Bento Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          {/* Card 1: Dark Tailor-Made AI Card */}
+          <div className="bg-[#0D131F] text-white rounded-3xl p-8 flex flex-col justify-between shadow-xl min-h-[360px]">
+            <div>
+              <div className="flex items-center justify-between mb-8">
+                <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-white">
+                  <Compass className="w-5 h-5" />
+                </div>
+                <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-stone-400">
+                  <span>AI Co-pilot</span>
+                  <div className="w-8 h-4 rounded-full bg-blue-600 p-0.5 flex items-center justify-end">
+                    <div className="w-3 h-3 rounded-full bg-white" />
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-sm text-stone-300 font-light leading-relaxed">
+                Journeys made personal: travel at your own pace, discover hidden places and experience destinations beyond the usual routes — authentic, personal and unforgettable.
+              </p>
+            </div>
+
+            <button
+              onClick={onOpenCreateTrip}
+              className="mt-8 w-full py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-98 text-white font-semibold text-xs tracking-wider uppercase transition-all border border-white/15 cursor-pointer"
+            >
+              Tailor-Made
+            </button>
+          </div>
+
+          {/* Card 2: Feature Photo Card ("Made for You") */}
+          <div className="relative rounded-3xl overflow-hidden min-h-[360px] shadow-xl group">
+            <img 
+              src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=800&q=80" 
+              alt="Hiker with backpack" 
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+            
+            {/* Top Pill: "Made for You" */}
+            <div className="absolute top-6 left-1/2 transform -translate-x-1/2">
+              <span className="text-xs font-semibold px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md text-slate-900 shadow-md">
+                Made for You
+              </span>
+            </div>
+          </div>
+
+          {/* Card 3: Experiences & Ratings Metric Card */}
+          <div className="bg-white rounded-3xl p-8 border border-stone-200/90 shadow-sm flex flex-col justify-between min-h-[360px]">
+            <div>
+              <span className="font-display font-extrabold text-5xl text-slate-900 tracking-tight">
+                50+
+              </span>
+              <h4 className="font-display font-bold text-sm text-slate-800 mt-1">
+                Unique Experiences
+              </h4>
+              <p className="text-xs text-slate-500 mt-2 font-light leading-relaxed">
+                Carefully selected journeys designed to reveal the real beauty, culture and spirit.
+              </p>
+
+              {/* Progress indicators matching design */}
+              <div className="mt-8 space-y-4">
+                
+                {/* Adventure */}
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-600 font-medium">Adventure</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-blue-600 text-sm">●●●●●●●●●●</span>
+                    <span className="font-bold text-slate-900 ml-1">4.9</span>
+                  </div>
+                </div>
+
+                {/* Culture */}
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-600 font-medium">Culture</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-blue-600 text-sm">●●●●●●●●○○</span>
+                    <span className="font-bold text-slate-900 ml-1">4.8</span>
+                  </div>
+                </div>
+
+                {/* Wellness */}
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-600 font-medium">Wellness</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-blue-600 text-sm">●●●●●●○○○○</span>
+                    <span className="font-bold text-slate-900 ml-1">4.7</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div className="pt-6 border-t border-stone-100 flex items-center justify-between text-[11px] font-semibold text-slate-400">
+              <span>Verified Traveler Scores</span>
+              <span className="text-emerald-600">● 100% Guaranteed</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* 4. KEY METRICS STRIP */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-stone-200/80">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center sm:text-left">
+          
+          <div>
+            <h4 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
+              8,000+ m
+            </h4>
+            <p className="text-xs text-slate-500 font-medium mt-1">
+              Highest Himalayan Peaks
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
+              100+
+            </h4>
+            <p className="text-xs text-slate-500 font-medium mt-1">
+              Unique Experiences
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
+              50+
+            </h4>
+            <p className="text-xs text-slate-500 font-medium mt-1">
+              Curated Journeys
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
+              4 Seasons
+            </h4>
+            <p className="text-xs text-slate-500 font-medium mt-1">
+              Worth Exploring
+            </p>
+          </div>
+
+        </div>
+      </section>
+
     </div>
   );
 }

@@ -34,12 +34,22 @@ async function getTrip(req, res) {
 
 async function updateTrip(req, res) {
   requireObjectId(req.params.id);
-  const trip = await Trip.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-  if (!trip) {
+  const existingTrip = await Trip.findById(req.params.id);
+  if (!existingTrip) {
     const error = new Error('Trip not found');
     error.statusCode = 404;
     throw error;
   }
+
+  const startDate = req.body.startDate || existingTrip.startDate;
+  const endDate = req.body.endDate || existingTrip.endDate;
+  if (endDate < startDate) {
+    const error = new Error('endDate must not be before startDate');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const trip = await Trip.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
   res.json(success(serializeTrip(trip), 'Trip updated successfully'));
 }
 

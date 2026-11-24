@@ -14,16 +14,16 @@ import { formatCurrency, getBudgetStatus } from '../../utils/formatters';
 export default function BudgetBanner({ trip }) {
   if (!trip) return null;
 
-  const totalBudget = trip.totalBudget || 0;
-  const totalEstimated = trip.totalEstimatedExpenses || 0;
-  const totalActual = trip.totalActualExpenses || 0;
-  const remaining = trip.remainingBudget !== undefined ? trip.remainingBudget : (totalBudget - totalActual);
-  const utilization = trip.budgetUtilizationPercent || 0;
-  const variance = trip.spendingVariance || 0;
-  const projectedRemaining = trip.projectedBudgetRemaining !== undefined 
+  const totalBudget = trip.budget?.totalBudget ?? trip.totalBudget ?? 0;
+  const totalEstimated = trip.budget?.totalEstimated ?? trip.totalEstimatedExpenses ?? 0;
+  const totalActual = trip.budget?.totalActual ?? trip.totalActualExpenses ?? 0;
+  const remaining = trip.budget?.remainingBudget ?? (trip.remainingBudget !== undefined ? trip.remainingBudget : (totalBudget - totalActual));
+  const utilization = trip.budget?.utilizationPercentage ?? trip.budgetUtilizationPercent ?? 0;
+  const variance = trip.budget?.variance ?? (trip.spendingVariance || 0);
+  const projectedRemaining = trip.budget?.projectedRemaining ?? (trip.projectedBudgetRemaining !== undefined 
     ? trip.projectedBudgetRemaining 
-    : (totalBudget - totalEstimated);
-  const isOverBudget = trip.isOverBudget || (totalActual > totalBudget);
+    : (totalBudget - totalEstimated));
+  const isOverBudget = trip.budget?.isOverBudget ?? (trip.isOverBudget || (totalActual > totalBudget));
 
   const status = getBudgetStatus(utilization);
 

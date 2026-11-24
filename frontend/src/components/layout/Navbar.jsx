@@ -1,5 +1,5 @@
-import React from 'react';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Compass, 
   MapPin, 
@@ -8,13 +8,27 @@ import {
   Files, 
   Sparkles, 
   Plus, 
-  ChevronDown 
+  ChevronDown,
+  ArrowRight,
+  LogIn
 } from 'lucide-react';
 import { useTripContext } from '../../context/TripContext';
 
 export default function Navbar({ onOpenCreateTrip }) {
   const { trips, activeTrip, selectTrip } = useTripContext();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isHome = location.pathname === '/';
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleTripChange = (e) => {
     const selectedId = e.target.value;
@@ -24,32 +38,139 @@ export default function Navbar({ onOpenCreateTrip }) {
     }
   };
 
-  return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          
-          {/* Brand Logo & Inspiration Badge */}
-          <div className="flex items-center gap-6">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center text-white shadow-pill transition-transform group-hover:scale-105">
-                <Compass className="w-5 h-5 animate-pulse" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-display font-extrabold text-xl tracking-tight text-slate-900 group-hover:text-brand-600 transition-colors">
-                  Roamly
-                </span>
-                <span className="text-[10px] font-semibold tracking-wider uppercase text-brand-600 -mt-1">
-                  Intelligent Planner
-                </span>
-              </div>
-            </Link>
+  // Dynamic navbar styling based on whether it's on the dark hero home or inner pages
+  const isTransparent = isHome && !scrolled;
 
-            {/* Active Trip Quick Switcher */}
-            {trips.length > 0 && (
-              <div className="hidden md:flex items-center">
+  return (
+    <header className={`sticky top-0 z-50 transition-all duration-300 ${
+      isTransparent 
+        ? 'bg-transparent text-white border-transparent' 
+        : 'bg-white/95 backdrop-blur-md text-slate-800 border-b border-stone-200/80 shadow-xs'
+    }`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          
+          {/* Brand Logo */}
+          <Link to="/" className="flex items-center gap-2 group">
+            <span className={`font-display font-medium text-2xl tracking-tight transition-colors ${
+              isTransparent ? 'text-white' : 'text-slate-900 group-hover:text-amber-600'
+            }`}>
+              Roamly
+            </span>
+            <span className={`w-1.5 h-1.5 rounded-full ${isTransparent ? 'bg-amber-400' : 'bg-slate-900'}`} />
+          </Link>
+
+          {/* Center Navigation Links (Matching Screenshot: Home, Destinations, Tours, Experiences, Contact) */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+            <NavLink 
+              to="/" 
+              className={({ isActive }) => 
+                `transition-colors ${
+                  isTransparent 
+                    ? (isActive ? 'text-white font-semibold' : 'text-stone-300 hover:text-white')
+                    : (isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900')
+                }`
+              }
+            >
+              Home
+            </NavLink>
+
+            <NavLink 
+              to="/trips" 
+              className={({ isActive }) => 
+                `flex items-center gap-1.5 transition-colors ${
+                  isTransparent 
+                    ? (isActive ? 'text-white font-semibold' : 'text-stone-300 hover:text-white')
+                    : (isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900')
+                }`
+              }
+            >
+              <span>Trips</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/80 text-white">
+                New
+              </span>
+            </NavLink>
+
+            {activeTrip ? (
+              <>
+                <NavLink 
+                  to={`/trips/${activeTrip._id}`} 
+                  end
+                  className={({ isActive }) => 
+                    `transition-colors ${
+                      isTransparent 
+                        ? (isActive ? 'text-white font-semibold' : 'text-stone-300 hover:text-white')
+                        : (isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900')
+                    }`
+                  }
+                >
+                  Workspace
+                </NavLink>
+
+                <NavLink 
+                  to={`/trips/${activeTrip._id}/budget`} 
+                  className={({ isActive }) => 
+                    `transition-colors ${
+                      isTransparent 
+                        ? (isActive ? 'text-white font-semibold' : 'text-stone-300 hover:text-white')
+                        : (isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900')
+                    }`
+                  }
+                >
+                  Budget
+                </NavLink>
+
+                <NavLink 
+                  to={`/trips/${activeTrip._id}/documents`} 
+                  className={({ isActive }) => 
+                    `transition-colors ${
+                      isTransparent 
+                        ? (isActive ? 'text-white font-semibold' : 'text-stone-300 hover:text-white')
+                        : (isActive ? 'text-slate-900 font-semibold' : 'text-slate-600 hover:text-slate-900')
+                    }`
+                  }
+                >
+                  Documents
+                </NavLink>
+
+                <NavLink 
+                  to={`/trips/${activeTrip._id}/ai`} 
+                  className={({ isActive }) => 
+                    `flex items-center gap-1 transition-colors ${
+                      isTransparent 
+                        ? (isActive ? 'text-white font-semibold' : 'text-stone-300 hover:text-white')
+                        : (isActive ? 'text-purple-600 font-semibold' : 'text-slate-600 hover:text-slate-900')
+                    }`
+                  }
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+                  <span>AI Co-pilot</span>
+                </NavLink>
+              </>
+            ) : (
+              <>
+                <span className={`cursor-pointer transition-colors ${
+                  isTransparent ? 'text-stone-300 hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                }`} onClick={onOpenCreateTrip}>
+                  Destinations
+                </span>
+                <span className={`cursor-pointer transition-colors ${
+                  isTransparent ? 'text-stone-300 hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                }`} onClick={onOpenCreateTrip}>
+                  Experiences
+                </span>
+              </>
+            )}
+          </nav>
+
+          {/* Right Action: Log in / Plan Trip (Matching screenshot arrow circle icon) */}
+          <div className="flex items-center gap-3">
+            
+            {/* Active trip quick switcher */}
+            {trips.length > 0 && !isTransparent && (
+              <div className="hidden lg:flex items-center">
                 <div className="relative inline-flex items-center bg-stone-100 hover:bg-stone-200/80 rounded-full px-3 py-1.5 transition-colors text-xs font-medium text-slate-700">
-                  <MapPin className="w-3.5 h-3.5 text-brand-500 mr-1.5" />
+                  <MapPin className="w-3.5 h-3.5 text-slate-900 mr-1.5" />
                   <select 
                     value={activeTrip?._id || ''} 
                     onChange={handleTripChange}
@@ -57,7 +178,7 @@ export default function Navbar({ onOpenCreateTrip }) {
                   >
                     {trips.map(t => (
                       <option key={t._id} value={t._id}>
-                        {t.name} ({t.destination})
+                        {t.name}
                       </option>
                     ))}
                   </select>
@@ -65,94 +186,21 @@ export default function Navbar({ onOpenCreateTrip }) {
                 </div>
               </div>
             )}
-          </div>
 
-          {/* Navigation Links for Different Pages */}
-          <nav className="hidden lg:flex items-center gap-1 text-sm font-medium">
-            <NavLink 
-              to="/trips" 
-              className={({ isActive }) => 
-                `px-3 py-2 rounded-xl transition-all ${
-                  isActive 
-                    ? 'bg-stone-100 text-brand-600 font-semibold shadow-xs' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-stone-50'
-                }`
-              }
-            >
-              My Trips
-            </NavLink>
-
-            {activeTrip && (
-              <>
-                <NavLink 
-                  to={`/trips/${activeTrip._id}`} 
-                  end
-                  className={({ isActive }) => 
-                    `flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all ${
-                      isActive 
-                        ? 'bg-stone-100 text-brand-600 font-semibold shadow-xs' 
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-stone-50'
-                    }`
-                  }
-                >
-                  <Calendar className="w-4 h-4 text-brand-500" />
-                  Itinerary & Map
-                </NavLink>
-
-                <NavLink 
-                  to={`/trips/${activeTrip._id}/budget`} 
-                  className={({ isActive }) => 
-                    `flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all ${
-                      isActive 
-                        ? 'bg-stone-100 text-brand-600 font-semibold shadow-xs' 
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-stone-50'
-                    }`
-                  }
-                >
-                  <PieChart className="w-4 h-4 text-emerald-500" />
-                  Budget Tracker
-                </NavLink>
-
-                <NavLink 
-                  to={`/trips/${activeTrip._id}/documents`} 
-                  className={({ isActive }) => 
-                    `flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all ${
-                      isActive 
-                        ? 'bg-stone-100 text-brand-600 font-semibold shadow-xs' 
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-stone-50'
-                    }`
-                  }
-                >
-                  <Files className="w-4 h-4 text-blue-500" />
-                  Documents
-                </NavLink>
-
-                <NavLink 
-                  to={`/trips/${activeTrip._id}/ai`} 
-                  className={({ isActive }) => 
-                    `flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all ${
-                      isActive 
-                        ? 'bg-stone-100 text-purple-600 font-semibold shadow-xs' 
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-stone-50'
-                    }`
-                  }
-                >
-                  <Sparkles className="w-4 h-4 text-purple-500" />
-                  AI Co-pilot
-                </NavLink>
-              </>
-            )}
-          </nav>
-
-          {/* Action Button: Create New Trip */}
-          <div className="flex items-center gap-2.5">
             <button
               onClick={onOpenCreateTrip}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 active:scale-95 text-white font-medium text-sm shadow-pill transition-all"
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all cursor-pointer ${
+                isTransparent 
+                  ? 'bg-white/15 hover:bg-white text-white hover:text-slate-900 border border-white/20' 
+                  : 'bg-slate-900 hover:bg-slate-800 text-white shadow-md'
+              }`}
             >
-              <Plus className="w-4 h-4" />
-              <span>New Trip</span>
+              <div className="w-4 h-4 rounded-full border border-current flex items-center justify-center">
+                <ArrowRight className="w-2.5 h-2.5" />
+              </div>
+              <span>Build Trip</span>
             </button>
+
           </div>
 
         </div>

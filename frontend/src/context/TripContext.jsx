@@ -102,10 +102,33 @@ export const TripProvider = ({ children }) => {
   const addActivity = async (tripId, activityData) => {
     try {
       const res = await tripApi.addActivity(tripId, activityData);
-      const updatedTrip = res.data;
-      setActiveTrip(updatedTrip);
-      setTrips(prev => prev.map(t => t._id === tripId ? updatedTrip : t));
-      return updatedTrip;
+      // Handles both full trip return or { activity, budget } return
+      if (res.data?.activity && res.data?.budget) {
+        setActiveTrip(prev => {
+          if (!prev) return prev;
+          const updatedActivities = [...(prev.activities || []), res.data.activity];
+          return {
+            ...prev,
+            activities: updatedActivities,
+            budget: res.data.budget
+          };
+        });
+        setTrips(prev => prev.map(t => {
+          if (t._id === tripId) {
+            return {
+              ...t,
+              activities: [...(t.activities || []), res.data.activity],
+              budget: res.data.budget
+            };
+          }
+          return t;
+        }));
+      } else if (res.data) {
+        const updatedTrip = res.data;
+        setActiveTrip(updatedTrip);
+        setTrips(prev => prev.map(t => t._id === tripId ? updatedTrip : t));
+      }
+      return res.data;
     } catch (err) {
       throw err;
     }
@@ -114,10 +137,37 @@ export const TripProvider = ({ children }) => {
   const updateActivity = async (tripId, activityId, activityData) => {
     try {
       const res = await tripApi.updateActivity(tripId, activityId, activityData);
-      const updatedTrip = res.data;
-      setActiveTrip(updatedTrip);
-      setTrips(prev => prev.map(t => t._id === tripId ? updatedTrip : t));
-      return updatedTrip;
+      if (res.data?.activity && res.data?.budget) {
+        setActiveTrip(prev => {
+          if (!prev) return prev;
+          const updatedActivities = (prev.activities || []).map(a => 
+            a._id === activityId ? res.data.activity : a
+          );
+          return {
+            ...prev,
+            activities: updatedActivities,
+            budget: res.data.budget
+          };
+        });
+        setTrips(prev => prev.map(t => {
+          if (t._id === tripId) {
+            const updatedActivities = (t.activities || []).map(a => 
+              a._id === activityId ? res.data.activity : a
+            );
+            return {
+              ...t,
+              activities: updatedActivities,
+              budget: res.data.budget
+            };
+          }
+          return t;
+        }));
+      } else if (res.data) {
+        const updatedTrip = res.data;
+        setActiveTrip(updatedTrip);
+        setTrips(prev => prev.map(t => t._id === tripId ? updatedTrip : t));
+      }
+      return res.data;
     } catch (err) {
       throw err;
     }
@@ -126,10 +176,31 @@ export const TripProvider = ({ children }) => {
   const deleteActivity = async (tripId, activityId) => {
     try {
       const res = await tripApi.deleteActivity(tripId, activityId);
-      const updatedTrip = res.data;
-      setActiveTrip(updatedTrip);
-      setTrips(prev => prev.map(t => t._id === tripId ? updatedTrip : t));
-      return updatedTrip;
+      if (res.data?.budget) {
+        setActiveTrip(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            activities: (prev.activities || []).filter(a => a._id !== activityId),
+            budget: res.data.budget
+          };
+        });
+        setTrips(prev => prev.map(t => {
+          if (t._id === tripId) {
+            return {
+              ...t,
+              activities: (t.activities || []).filter(a => a._id !== activityId),
+              budget: res.data.budget
+            };
+          }
+          return t;
+        }));
+      } else if (res.data) {
+        const updatedTrip = res.data;
+        setActiveTrip(updatedTrip);
+        setTrips(prev => prev.map(t => t._id === tripId ? updatedTrip : t));
+      }
+      return res.data;
     } catch (err) {
       throw err;
     }
