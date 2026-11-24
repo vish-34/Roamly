@@ -1,5 +1,13 @@
+const dns = require('node:dns');
 const mongoose = require('mongoose');
 const { env } = require('./env');
+
+// Resolve Windows DNS SRV lookup issues for MongoDB Atlas clusters
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4']);
+} catch (e) {
+  // fallback to system default
+}
 
 async function connectDatabase() {
   if (!env.MONGODB_URI) {
