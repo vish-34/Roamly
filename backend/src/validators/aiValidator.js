@@ -3,8 +3,7 @@ const { z } = require('zod');
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const generatedActivitySchema = z.object({
   name: z.string().min(1), address: z.string().default(''), time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
-  estimatedCost: z.number().nonnegative(), notes: z.string().default(''),
-  location: z.object({ lat: z.number().gte(-90).lte(90), lng: z.number().gte(-180).lte(180) })
+  estimatedCost: z.number().nonnegative(), notes: z.string().default('')
 });
 const generatedItinerarySchema = z.object({
   summary: z.string().min(1),

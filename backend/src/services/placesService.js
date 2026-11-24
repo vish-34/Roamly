@@ -4,6 +4,22 @@ const { env } = require('../config/env');
 const cache = new Map();
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
+async function geoapifyGet(url, params) {
+  let lastError;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      return await axios.get(url, { params, timeout: 20000 });
+    } catch (error) {
+      lastError = error;
+      if (attempt === 0 && (error.code === 'ECONNABORTED' || error.response?.status >= 500)) continue;
+    }
+  }
+  const error = new Error('Geoapify request failed');
+  error.statusCode = 502;
+  error.details = lastError?.message;
+  throw error;
+}
+
 function getKey(key) {
   const item = cache.get(key);
   if (item && item.expiresAt > Date.now()) return item.value;
@@ -39,10 +55,7 @@ async function searchPlaces(query, destination = '') {
   const cacheKey = `search:${searchText.toLowerCase()}`;
   const cached = getKey(cacheKey);
   if (cached) return cached;
-  const { data } = await axios.get('https://api.geoapify.com/v1/geocode/autocomplete', {
-    params: { text: searchText, type: 'amenity', limit: 10, format: 'json', apiKey: env.GEOAPIFY_API_KEY },
-    timeout: 10000
-  });
+  const { data } = await geoapifyGet('https://api.geoapify.com/v1/geocode/autocomplete', { text: searchText, limit: 10, format: 'json', apiKey: env.GEOAPIFY_API_KEY });
   const places = (data.results || []).map(normalizePlace);
   places.forEach((place) => setKey(`details:${place.placeId}`, place));
   return setKey(cacheKey, places);
@@ -52,9 +65,7 @@ async function getPlaceDetails(placeId) {
   requireGeoapify();
   const cached = getKey(`details:${placeId}`);
   if (cached) return cached;
-  const { data } = await axios.get('https://api.geoapify.com/v2/place-details', {
-    params: { id: placeId, apiKey: env.GEOAPIFY_API_KEY }, timeout: 10000
-  });
+  const { data } = await geoapifyGet('https://api.geoapify.com/v2/place-details', { id: placeId, apiKey: env.GEOAPIFY_API_KEY });
   const feature = data.features?.[0];
   if (!feature) { const error = new Error('Place not found'); error.statusCode = 404; throw error; }
   const properties = feature.properties || {};

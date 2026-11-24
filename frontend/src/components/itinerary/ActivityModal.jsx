@@ -221,13 +221,13 @@ export default function ActivityModal({
         </div>
 
         {/* Mandatory Vibe Check: Estimated vs Actual Cost */}
-        <div className="bg-stone-50 p-4.5 rounded-2xl border border-stone-200 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-              <DollarSign className="w-4 h-4 text-emerald-600" />
+        <div className="bg-stone-50/80 p-4 sm:p-4.5 rounded-2xl border border-stone-200">
+          <div className="flex items-center justify-between pb-2.5 border-b border-stone-200/70 mb-3">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+              <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
               Expense Ledger Details
             </span>
-            <span className="text-[10px] font-bold text-slate-500 bg-white px-2.5 py-0.5 rounded-full border border-stone-200">
+            <span className="text-[10px] font-semibold text-slate-500 bg-white px-2.5 py-0.5 rounded-full border border-stone-200">
               Tristate Handling
             </span>
           </div>
@@ -235,7 +235,7 @@ export default function ActivityModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             {/* Estimated Cost */}
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                 Estimated Cost ({trip?.currency || 'USD'})
               </label>
               <input
@@ -246,24 +246,24 @@ export default function ActivityModal({
                 value={formData.estimatedCost}
                 onChange={handleChange}
                 placeholder="25"
-                className="w-full px-4 py-2.5 rounded-2xl border border-stone-200 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-sm font-bold text-slate-900"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-xs sm:text-sm font-bold text-slate-900 shadow-2xs"
                 required
               />
             </div>
 
             {/* Actual Cost */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-semibold text-slate-600">
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600">
                   Actual Cost
                 </label>
-                <label className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-800 cursor-pointer">
+                <label className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white border border-stone-200 hover:border-slate-400 text-[11px] font-semibold text-slate-700 cursor-pointer transition-colors">
                   <input
                     type="checkbox"
                     name="hasActualExpense"
                     checked={formData.hasActualExpense}
                     onChange={handleChange}
-                    className="rounded text-slate-900 focus:ring-slate-900 cursor-pointer"
+                    className="w-3.5 h-3.5 rounded text-slate-900 focus:ring-slate-900 cursor-pointer"
                   />
                   <span>Spent</span>
                 </label>
@@ -278,8 +278,10 @@ export default function ActivityModal({
                 value={formData.hasActualExpense ? (formData.actualCost !== null ? formData.actualCost : '') : ''}
                 onChange={handleChange}
                 placeholder={formData.hasActualExpense ? '0.00' : 'Pending'}
-                className={`w-full px-4 py-2.5 rounded-2xl border border-stone-200 text-sm font-bold text-slate-900 ${
-                  formData.hasActualExpense ? 'bg-white focus:ring-2 focus:ring-slate-900' : 'bg-stone-100 text-slate-400 cursor-not-allowed'
+                className={`w-full px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-bold transition-all ${
+                  formData.hasActualExpense 
+                    ? 'border-stone-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 shadow-2xs' 
+                    : 'border-stone-200/60 bg-stone-100/80 text-slate-400 cursor-not-allowed'
                 }`}
               />
             </div>
