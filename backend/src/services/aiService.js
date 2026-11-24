@@ -3,6 +3,7 @@ const Trip = require('../models/Trip');
 const { env } = require('../config/env');
 const { generatedItinerarySchema } = require('../validators/aiValidator');
 const { serializeTrip } = require('./tripService');
+const { searchPlaces } = require('./placesService');
 
 function getClient() {
   if (!env.GROQ_API_KEY) { const error = new Error('GROQ_API_KEY is not configured'); error.statusCode = 503; throw error; }
@@ -10,7 +11,7 @@ function getClient() {
 }
 
 async function complete(messages, responseFormat) {
-  const completion = await getClient().chat.completions.create({ model: 'llama-3.3-70b-versatile', messages, temperature: 0.4, ...(responseFormat ? { response_format: responseFormat } : {}) });
+  const completion = await getClient().chat.completions.create({ model: env.GROQ_MODEL, messages, temperature: 0.4, ...(responseFormat ? { response_format: responseFormat } : {}) });
   return completion.choices[0]?.message?.content || '';
 }
 
@@ -19,7 +20,20 @@ async function generateItinerary(input) {
     { role: 'system', content: 'You create practical travel itineraries. Return only valid JSON matching {summary:string,days:[{dayNumber:number,title:string,activities:[{name:string,address:string,time:HH:mm,estimatedCost:number,notes:string,location:{lat:number,lng:number}}]}]}. Never invent coordinates: use destination center coordinates when unsure.' },
     { role: 'user', content: JSON.stringify(input) }
   ], { type: 'json_object' });
-  try { return generatedItinerarySchema.parse(JSON.parse(content)); } catch { const error = new Error('AI returned an invalid itinerary format'); error.statusCode = 502; throw error; }
+  let itinerary;
+  try { itinerary = generatedItinerarySchema.parse(JSON.parse(content)); } catch { const error = new Error('AI returned an invalid itinerary format'); error.statusCode = 502; throw error; }
+
+  for (const day of itinerary.days) {
+    for (const activity of day.activities) {
+      const [place] = await searchPlaces(`${activity.name} ${activity.address}`, input.destination);
+      if (place) {
+        activity.address = place.address;
+        activity.location = place.location;
+        activity.googlePlaceId = place.placeId;
+      }
+    }
+  }
+  return itinerary;
 }
 
 async function chat({ tripId, message }) {

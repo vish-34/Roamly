@@ -10,6 +10,7 @@ const environmentSchema = z.object({
   PORT: z.coerce.number().int().positive().default(5000),
   MONGODB_URI: optionalSecret,
   GROQ_API_KEY: optionalSecret,
+  GROQ_MODEL: z.string().min(1).default('openai/gpt-oss-20b'),
   GEOAPIFY_API_KEY: optionalSecret,
   CORS_ORIGIN: z.string().url().default('http://localhost:5173')
 });

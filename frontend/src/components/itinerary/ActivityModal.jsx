@@ -7,7 +7,8 @@ import {
   FileText, 
   Check, 
   Sparkles,
-  Loader2 
+  Loader2,
+  ArrowRight
 } from 'lucide-react';
 import Modal from '../common/Modal';
 
@@ -70,7 +71,7 @@ export default function ActivityModal({
   }, [activity, trip, isOpen]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, checked } = e.target;
     
     if (name === 'hasActualExpense') {
       setFormData(prev => ({
@@ -116,7 +117,6 @@ export default function ActivityModal({
         time: formData.time,
         notes: formData.notes.trim(),
         estimatedCost: formData.estimatedCost,
-        // Preserve tristate: null if unrecorded, number (even 0) if confirmed
         actualCost: formData.hasActualExpense ? (formData.actualCost !== null ? formData.actualCost : 0) : null
       };
 
@@ -129,16 +129,28 @@ export default function ActivityModal({
     }
   };
 
+  const modalTitle = (
+    <div>
+      <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 bg-stone-100 px-3 py-1 rounded-full border border-stone-200/60 mb-1.5">
+        {isEditing ? 'Modify Activity' : 'New Stop'} • Itinerary
+      </span>
+      <h3 className="font-display font-normal text-2xl text-slate-900 tracking-tight">
+        {isEditing ? 'Edit Stop &' : 'Add Stop to'} <span className="font-serif italic font-normal text-slate-950">{isEditing ? 'Expenses' : 'Itinerary'}</span>
+      </h3>
+    </div>
+  );
+
   return (
     <Modal 
       isOpen={isOpen} 
       onClose={onClose} 
-      title={isEditing ? 'Edit Activity & Costs' : 'Add Activity to Itinerary'}
+      title={modalTitle}
+      maxWidth="max-w-xl"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         
         {error && (
-          <div className="p-3 rounded-xl bg-rose-50 text-rose-700 text-xs font-semibold border border-rose-200">
+          <div className="p-3.5 rounded-2xl bg-rose-50 text-rose-700 text-xs font-semibold border border-rose-200">
             {error}
           </div>
         )}
@@ -146,15 +158,15 @@ export default function ActivityModal({
         {/* Activity Name */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-            Activity / Place Name
+            Activity / Destination Name
           </label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="e.g. Senso-ji Temple & Street Food"
-            className="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-semibold text-slate-900"
+            placeholder="e.g. Sunrise Viewpoint & Lake Cruise"
+            className="w-full px-4 py-3 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-sm font-semibold text-slate-900 transition-all"
             required
           />
         </div>
@@ -165,20 +177,20 @@ export default function ActivityModal({
             Location Address
           </label>
           <div className="relative">
-            <MapPin className="w-4 h-4 text-brand-500 absolute left-3.5 top-3" />
+            <MapPin className="w-4 h-4 text-slate-700 absolute left-4 top-3.5" />
             <input
               type="text"
               name="address"
               value={formData.address}
               onChange={handleChange}
-              placeholder="e.g. 2 Chome-3-1 Asakusa, Taito City, Tokyo"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm text-slate-800"
+              placeholder="e.g. North Lakeside Promenade, Pokhara"
+              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-sm text-slate-800 transition-all"
             />
           </div>
         </div>
 
         {/* Date & Time */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
               Scheduled Date
@@ -188,7 +200,7 @@ export default function ActivityModal({
               name="date"
               value={formData.date}
               onChange={handleChange}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium text-slate-900"
+              className="w-full px-4 py-2.5 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-sm font-medium text-slate-900 transition-all cursor-pointer"
               required
             />
           </div>
@@ -202,25 +214,25 @@ export default function ActivityModal({
               name="time"
               value={formData.time}
               onChange={handleChange}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium text-slate-900"
+              className="w-full px-4 py-2.5 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-sm font-medium text-slate-900 transition-all cursor-pointer"
               required
             />
           </div>
         </div>
 
         {/* Mandatory Vibe Check: Estimated vs Actual Cost */}
-        <div className="bg-stone-50 p-4 rounded-2xl border border-stone-200/80 space-y-3">
+        <div className="bg-stone-50 p-4.5 rounded-2xl border border-stone-200 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
               <DollarSign className="w-4 h-4 text-emerald-600" />
-              Expense Details
+              Expense Ledger Details
             </span>
-            <span className="text-[11px] font-bold text-slate-400">
-              Tristate Validated
+            <span className="text-[10px] font-bold text-slate-500 bg-white px-2.5 py-0.5 rounded-full border border-stone-200">
+              Tristate Handling
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             {/* Estimated Cost */}
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1">
@@ -234,7 +246,7 @@ export default function ActivityModal({
                 value={formData.estimatedCost}
                 onChange={handleChange}
                 placeholder="25"
-                className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-bold text-slate-900"
+                className="w-full px-4 py-2.5 rounded-2xl border border-stone-200 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-sm font-bold text-slate-900"
                 required
               />
             </div>
@@ -245,13 +257,13 @@ export default function ActivityModal({
                 <label className="text-xs font-semibold text-slate-600">
                   Actual Cost
                 </label>
-                <label className="flex items-center gap-1.5 text-[11px] font-medium text-brand-600 cursor-pointer">
+                <label className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-800 cursor-pointer">
                   <input
                     type="checkbox"
                     name="hasActualExpense"
                     checked={formData.hasActualExpense}
                     onChange={handleChange}
-                    className="rounded text-brand-500 focus:ring-brand-500"
+                    className="rounded text-slate-900 focus:ring-slate-900 cursor-pointer"
                   />
                   <span>Spent</span>
                 </label>
@@ -265,17 +277,13 @@ export default function ActivityModal({
                 disabled={!formData.hasActualExpense}
                 value={formData.hasActualExpense ? (formData.actualCost !== null ? formData.actualCost : '') : ''}
                 onChange={handleChange}
-                placeholder={formData.hasActualExpense ? '0.00' : 'Pending expense'}
-                className={`w-full px-3 py-2 rounded-xl border border-stone-200 text-sm font-bold text-slate-900 ${
-                  formData.hasActualExpense ? 'bg-white focus:ring-2 focus:ring-brand-500' : 'bg-stone-100/70 text-slate-400 cursor-not-allowed'
+                placeholder={formData.hasActualExpense ? '0.00' : 'Pending'}
+                className={`w-full px-4 py-2.5 rounded-2xl border border-stone-200 text-sm font-bold text-slate-900 ${
+                  formData.hasActualExpense ? 'bg-white focus:ring-2 focus:ring-slate-900' : 'bg-stone-100 text-slate-400 cursor-not-allowed'
                 }`}
               />
             </div>
           </div>
-
-          <p className="text-[11px] text-slate-500">
-            * Unrecorded actual costs are treated as pending and do not distort confirmed spend calculations.
-          </p>
         </div>
 
         {/* Personal Notes */}
@@ -288,17 +296,17 @@ export default function ActivityModal({
             rows="2"
             value={formData.notes}
             onChange={handleChange}
-            placeholder="e.g. Buy tickets at the south entrance, try the matcha ice cream"
-            className="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-xs text-slate-800 resize-none"
+            placeholder="e.g. Wear walking boots, pre-book boats at the east pier"
+            className="w-full px-4 py-2.5 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-xs text-slate-800 resize-none transition-all"
           />
         </div>
 
         {/* Form Actions */}
-        <div className="pt-3 flex items-center justify-end gap-2.5 border-t border-stone-100">
+        <div className="pt-4 flex items-center justify-end gap-3 border-t border-stone-100">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-stone-100 transition-colors"
+            className="px-5 py-2.5 rounded-full text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
           >
             Cancel
           </button>
@@ -306,7 +314,7 @@ export default function ActivityModal({
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 active:scale-95 text-white font-semibold text-sm shadow-pill transition-all cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-slate-950 hover:bg-slate-800 active:scale-95 text-white font-medium text-xs tracking-wider uppercase shadow-xl transition-all cursor-pointer disabled:opacity-50"
           >
             {loading ? (
               <>
@@ -316,7 +324,7 @@ export default function ActivityModal({
             ) : (
               <>
                 <Check className="w-4 h-4" />
-                <span>{isEditing ? 'Update Stop' : 'Add Stop'}</span>
+                <span>{isEditing ? 'Update Stop' : 'Confirm Stop'}</span>
               </>
             )}
           </button>

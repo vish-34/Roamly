@@ -6,7 +6,9 @@ import {
   DollarSign, 
   Globe, 
   Sparkles,
-  Loader2 
+  Loader2,
+  ArrowRight,
+  Compass
 } from 'lucide-react';
 import Modal from '../common/Modal';
 import { useTripContext } from '../../context/TripContext';
@@ -26,6 +28,23 @@ export default function CreateTripModal({ isOpen, onClose }) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Quick suggestions matching web tours
+  const suggestedDestinations = [
+    { label: 'Pokhara Retreat', dest: 'Pokhara, Nepal', budget: 540 },
+    { label: 'Everest Escape', dest: 'Everest Base, Nepal', budget: 950 },
+    { label: 'Annapurna Trail', dest: 'Annapurna, Nepal', budget: 750 },
+    { label: 'Kathmandu Soul', dest: 'Kathmandu, Nepal', budget: 410 },
+  ];
+
+  const handleSelectSuggestion = (item) => {
+    setFormData(prev => ({
+      ...prev,
+      name: item.label,
+      destination: item.dest,
+      totalBudget: item.budget
+    }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,19 +78,50 @@ export default function CreateTripModal({ isOpen, onClose }) {
     }
   };
 
+  const modalTitle = (
+    <div>
+      <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 bg-stone-100 px-3 py-1 rounded-full border border-stone-200/60 mb-1.5">
+        New Journey • Roamly
+      </span>
+      <h3 className="font-display font-normal text-2xl text-slate-900 tracking-tight">
+        Plan a New <span className="font-serif italic font-normal text-slate-950">Journey</span>
+      </h3>
+    </div>
+  );
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Plan a New Adventure">
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <Modal isOpen={isOpen} onClose={onClose} title={modalTitle} maxWidth="max-w-xl">
+      <form onSubmit={handleSubmit} className="space-y-5">
         
         {error && (
-          <div className="p-3 rounded-xl bg-rose-50 text-rose-700 text-xs font-semibold border border-rose-200">
+          <div className="p-3.5 rounded-2xl bg-rose-50 text-rose-700 text-xs font-semibold border border-rose-200">
             {error}
           </div>
         )}
 
+        {/* Quick Inspiration Chips */}
+        <div>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+            Quick Inspirations
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {suggestedDestinations.map((item) => (
+              <button
+                type="button"
+                key={item.label}
+                onClick={() => handleSelectSuggestion(item)}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-stone-50 hover:bg-slate-900 hover:text-white px-3 py-1.5 rounded-full border border-stone-200 hover:border-slate-900 transition-all cursor-pointer active:scale-95"
+              >
+                <Compass className="w-3 h-3 text-amber-600" />
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Trip Name */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
             Trip Name
           </label>
           <input
@@ -79,70 +129,74 @@ export default function CreateTripModal({ isOpen, onClose }) {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="e.g. Summer in Tokyo & Kyoto"
-            className="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium text-slate-900"
+            placeholder="e.g. Autumn in Pokhara & Annapurna"
+            className="w-full px-4 py-3 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-sm font-semibold text-slate-900 transition-all"
             required
           />
         </div>
 
-        {/* Destination */}
+        {/* Primary Destination */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
             Primary Destination
           </label>
           <div className="relative">
-            <MapPin className="w-4 h-4 text-brand-500 absolute left-3.5 top-3" />
+            <MapPin className="w-4 h-4 text-slate-700 absolute left-4 top-3.5" />
             <input
               type="text"
               name="destination"
               value={formData.destination}
               onChange={handleChange}
-              placeholder="e.g. Tokyo, Japan"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium text-slate-900"
+              placeholder="e.g. Pokhara, Nepal"
+              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-sm font-medium text-slate-900 transition-all"
               required
             />
           </div>
         </div>
 
-        {/* Start Date & End Date */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* Dates */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
               Start Date
             </label>
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium text-slate-900"
-              required
-            />
+            <div className="relative">
+              <input
+                type="date"
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-sm font-medium text-slate-900 transition-all cursor-pointer"
+                required
+              />
+            </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
               End Date
             </label>
-            <input
-              type="date"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-              className="w-full px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium text-slate-900"
-              required
-            />
+            <div className="relative">
+              <input
+                type="date"
+                name="endDate"
+                value={formData.endDate}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-sm font-medium text-slate-900 transition-all cursor-pointer"
+                required
+              />
+            </div>
           </div>
         </div>
 
         {/* Total Budget & Currency */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
           <div className="sm:col-span-2">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
               Total Budget
             </label>
             <div className="relative">
-              <DollarSign className="w-4 h-4 text-emerald-600 absolute left-3.5 top-3" />
+              <DollarSign className="w-4 h-4 text-emerald-600 absolute left-4 top-3.5" />
               <input
                 type="number"
                 name="totalBudget"
@@ -151,21 +205,21 @@ export default function CreateTripModal({ isOpen, onClose }) {
                 value={formData.totalBudget}
                 onChange={handleChange}
                 placeholder="1500"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-bold text-slate-900"
+                className="w-full pl-11 pr-4 py-3 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-sm font-bold text-slate-900 transition-all"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
               Currency
             </label>
             <select
               name="currency"
               value={formData.currency}
               onChange={handleChange}
-              className="w-full px-3 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-semibold text-slate-800 bg-white"
+              className="w-full px-4 py-3 rounded-2xl bg-stone-50/70 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white text-sm font-semibold text-slate-800 transition-all cursor-pointer"
             >
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
@@ -177,12 +231,12 @@ export default function CreateTripModal({ isOpen, onClose }) {
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="pt-4 flex items-center justify-end gap-3 border-t border-stone-100">
+        {/* Modal Actions */}
+        <div className="pt-4 flex items-center justify-end gap-4 border-t border-stone-100">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-stone-100 transition-colors"
+            className="px-5 py-2.5 rounded-full text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
           >
             Cancel
           </button>
@@ -190,17 +244,19 @@ export default function CreateTripModal({ isOpen, onClose }) {
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 active:scale-95 text-white font-semibold text-sm shadow-pill transition-all cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-slate-950 hover:bg-slate-800 active:scale-95 text-white font-medium text-xs tracking-wider uppercase shadow-xl transition-all cursor-pointer disabled:opacity-50"
           >
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Creating Trip...</span>
+                <span>Building Journey...</span>
               </>
             ) : (
               <>
-                <Sparkles className="w-4 h-4" />
-                <span>Create Trip</span>
+                <div className="w-4 h-4 rounded-full border border-current flex items-center justify-center">
+                  <ArrowRight className="w-2.5 h-2.5" />
+                </div>
+                <span>Create Journey</span>
               </>
             )}
           </button>

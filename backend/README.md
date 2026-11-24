@@ -27,9 +27,10 @@ Express and MongoDB API for Roamly's travel-planning application. The frontend c
 - Budget metrics are computed for every response and are never persisted as totals.
 - `actualCost: null` means unrecorded, while `actualCost: 0` means confirmed free.
 - Documents accept PDF, PNG, JPEG, and WebP only, with a 10 MB limit; file bytes stream to the `travel_docs` GridFS bucket.
+- HTTP responses use Helmet security headers, disable framework identification, and limit JSON bodies to 1 MB.
 - Deleting a trip removes its referenced GridFS files.
 - Geoapify results are normalized and cached in memory for five minutes. Attribution must be displayed by the frontend.
-- Generated itineraries are validated with Zod and are preview-only; only the activity endpoint persists an activity after user confirmation.
+- Generated itineraries are validated with Zod, then their activity locations are resolved through Geoapify before being returned. They are preview-only; only the activity endpoint persists an activity after user confirmation.
 
 ## Verification
 
