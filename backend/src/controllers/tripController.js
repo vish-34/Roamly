@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Trip = require('../models/Trip');
 const { success } = require('../utils/apiResponse');
 const { serializeTrip } = require('../services/tripService');
+const { deleteTripDocuments } = require('../services/documentService');
 
 function requireObjectId(id) {
   if (!mongoose.isObjectIdOrHexString(id)) {
@@ -55,12 +56,14 @@ async function updateTrip(req, res) {
 
 async function deleteTrip(req, res) {
   requireObjectId(req.params.id);
-  const trip = await Trip.findByIdAndDelete(req.params.id);
+  const trip = await Trip.findById(req.params.id);
   if (!trip) {
     const error = new Error('Trip not found');
     error.statusCode = 404;
     throw error;
   }
+  await deleteTripDocuments(trip.documents);
+  await trip.deleteOne();
   res.status(200).json(success({ id: trip.id }, 'Trip deleted successfully'));
 }
 

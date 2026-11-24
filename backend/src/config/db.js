@@ -10,4 +10,13 @@ async function connectDatabase() {
   console.log(`Connected to MongoDB: ${mongoose.connection.name}`);
 }
 
-module.exports = { connectDatabase };
+function getGridFSBucket() {
+  if (mongoose.connection.readyState !== 1 || !mongoose.connection.db) {
+    const error = new Error('Database connection is not available');
+    error.statusCode = 503;
+    throw error;
+  }
+  return new mongoose.mongo.GridFSBucket(mongoose.connection.db, { bucketName: 'travel_docs' });
+}
+
+module.exports = { connectDatabase, getGridFSBucket };

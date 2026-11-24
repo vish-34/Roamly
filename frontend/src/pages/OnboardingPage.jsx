@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, 
@@ -78,14 +78,18 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
     }
   ];
 
-  const [activeTourIndex, setActiveTourIndex] = useState(2); // Center on Pokhara Retreat
+  const toursContainerRef = useRef(null);
 
   const handlePrevTour = () => {
-    setActiveTourIndex(prev => (prev === 0 ? tours.length - 1 : prev - 1));
+    if (toursContainerRef.current) {
+      toursContainerRef.current.scrollBy({ left: -320, behavior: 'smooth' });
+    }
   };
 
   const handleNextTour = () => {
-    setActiveTourIndex(prev => (prev === tours.length - 1 ? 0 : prev + 1));
+    if (toursContainerRef.current) {
+      toursContainerRef.current.scrollBy({ left: 320, behavior: 'smooth' });
+    }
   };
 
   const handlePlanTour = (destination) => {
@@ -105,13 +109,12 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
             alt="Majestic Mountain Range" 
             className="w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-out"
           />
-          {/* Gradient overlays for cinematic depth and high text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/85" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent h-48 bottom-0" />
+          {/* Crisp, uniform contrast overlay across the whole image without artificial bottom fade */}
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 sm:pt-40 pb-20 text-center flex-1 flex flex-col items-center justify-center">
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 sm:pt-40 pb-24 text-center flex-1 flex flex-col items-center justify-center">
           
           <h1 className="font-display font-medium text-4xl sm:text-6xl md:text-7xl lg:text-[80px] text-white tracking-tight leading-[1.08] drop-shadow-md">
             Roamly <span className="font-serif italic font-normal tracking-normal text-amber-200">Without Limits.</span><br />
@@ -143,9 +146,6 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
           </div>
 
         </div>
-
-        {/* Ambient bottom curve divider */}
-        <div className="relative z-10 h-12 bg-gradient-to-t from-[#FDFCF9] to-transparent w-full" />
       </section>
 
 
@@ -162,21 +162,18 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
           </h2>
         </div>
 
-        {/* 5-Card Horizontal Stack / Showcase */}
+        {/* Normal Uniform Cards: Each scales when hovered, normal size when not */}
         <div className="relative flex items-center justify-center py-6 overflow-hidden">
-          <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-6 px-4 snap-x">
-            {tours.map((tour, index) => {
-              const isCenter = index === activeTourIndex;
-
+          <div 
+            ref={toursContainerRef}
+            className="flex items-center gap-5 sm:gap-6 overflow-x-auto no-scrollbar py-8 px-4 scroll-smooth snap-x"
+          >
+            {tours.map((tour) => {
               return (
                 <div
                   key={tour.id}
-                  onClick={() => setActiveTourIndex(index)}
-                  className={`group relative rounded-3xl overflow-hidden shrink-0 transition-all duration-500 cursor-pointer snap-center ${
-                    isCenter 
-                      ? 'w-[280px] sm:w-[320px] h-[460px] sm:h-[490px] shadow-2xl ring-2 ring-slate-900/10 scale-105 z-20' 
-                      : 'w-[240px] sm:w-[270px] h-[410px] sm:h-[440px] opacity-75 hover:opacity-100 hover:scale-98 z-10'
-                  }`}
+                  onClick={() => handlePlanTour(tour.destination)}
+                  className="group relative w-[280px] sm:w-[305px] h-[460px] sm:h-[480px] rounded-3xl overflow-hidden shrink-0 shadow-lg border border-stone-200/50 cursor-pointer snap-center scale-100 hover:scale-105 hover:shadow-2xl z-10 hover:z-20 transition-all duration-300 ease-out"
                 >
                   {/* Card Background Image */}
                   <img 
@@ -184,14 +181,14 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
                     alt={tour.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10" />
 
                   {/* Card Content Overlay */}
                   <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
                     
                     {/* Header info: Title & Price */}
                     <div className="flex items-baseline justify-between gap-2 mb-2">
-                      <h3 className="font-display font-bold text-xl sm:text-2xl tracking-tight text-white">
+                      <h3 className="font-display font-bold text-xl sm:text-2xl tracking-tight text-white group-hover:text-amber-200 transition-colors">
                         {tour.title}
                       </h3>
                       <span className="font-display font-bold text-sm text-amber-300">
@@ -199,7 +196,7 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
                       </span>
                     </div>
 
-                    <p className="text-xs text-stone-300 line-clamp-2 font-light mb-4">
+                    <p className="text-xs text-stone-300 line-clamp-2 font-light mb-4 leading-relaxed">
                       {tour.description}
                     </p>
 
@@ -219,7 +216,7 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
                         e.stopPropagation();
                         handlePlanTour(tour.destination);
                       }}
-                      className="w-full py-3 rounded-full bg-white hover:bg-stone-100 active:scale-98 text-slate-950 font-bold text-xs tracking-wider uppercase transition-all shadow-lg text-center cursor-pointer"
+                      className="w-full py-3 rounded-full bg-white hover:bg-stone-100 active:scale-98 text-slate-950 font-bold text-xs tracking-wider uppercase transition-all shadow-md text-center cursor-pointer"
                     >
                       Explore
                     </button>
@@ -232,10 +229,10 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
         </div>
 
         {/* Navigation Buttons: (←) View More Tours (→) */}
-        <div className="flex items-center justify-center gap-4 mt-8">
+        <div className="flex items-center justify-center gap-4 mt-6">
           <button 
             onClick={handlePrevTour}
-            className="w-12 h-12 rounded-full border border-stone-300 hover:border-slate-800 hover:bg-stone-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            className="w-12 h-12 rounded-full border border-stone-300 hover:border-slate-800 hover:bg-stone-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer active:scale-95 shadow-xs"
             aria-label="Previous tour"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -247,7 +244,7 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
 
           <button 
             onClick={handleNextTour}
-            className="w-12 h-12 rounded-full border border-stone-300 hover:border-slate-800 hover:bg-stone-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
+            className="w-12 h-12 rounded-full border border-stone-300 hover:border-slate-800 hover:bg-stone-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer active:scale-95 shadow-xs"
             aria-label="Next tour"
           >
             <ArrowRight className="w-5 h-5" />
