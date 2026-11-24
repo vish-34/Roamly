@@ -62,7 +62,7 @@ export default function BudgetBanner({ trip }) {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-5">
         
         {/* Total Budget */}
-        <div className="bg-stone-50/80 rounded-2xl p-3.5 border border-stone-100">
+        <div className="bg-stone-50/80 rounded-2xl p-3.5 border border-stone-100 smooth-card hover:-translate-y-1 hover:shadow-md hover:border-stone-200">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
             <Wallet className="w-3.5 h-3.5 text-slate-400" /> Total Budget
           </span>
@@ -73,7 +73,7 @@ export default function BudgetBanner({ trip }) {
         </div>
 
         {/* Total Actual Expenses */}
-        <div className="bg-stone-50/80 rounded-2xl p-3.5 border border-stone-100">
+        <div className="bg-stone-50/80 rounded-2xl p-3.5 border border-stone-100 smooth-card hover:-translate-y-1 hover:shadow-md hover:border-stone-200">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
             <DollarSign className="w-3.5 h-3.5 text-emerald-600" /> Actual Spent
           </span>
@@ -84,7 +84,7 @@ export default function BudgetBanner({ trip }) {
         </div>
 
         {/* Remaining Budget */}
-        <div className="bg-stone-50/80 rounded-2xl p-3.5 border border-stone-100">
+        <div className="bg-stone-50/80 rounded-2xl p-3.5 border border-stone-100 smooth-card hover:-translate-y-1 hover:shadow-md hover:border-stone-200">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
             <TrendingUp className="w-3.5 h-3.5 text-blue-500" /> Remaining
           </span>
@@ -95,7 +95,7 @@ export default function BudgetBanner({ trip }) {
         </div>
 
         {/* Variance vs Estimated */}
-        <div className="bg-stone-50/80 rounded-2xl p-3.5 border border-stone-100">
+        <div className="bg-stone-50/80 rounded-2xl p-3.5 border border-stone-100 smooth-card hover:-translate-y-1 hover:shadow-md hover:border-stone-200">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
             {variance > 0 ? (
               <TrendingDown className="w-3.5 h-3.5 text-rose-500" />

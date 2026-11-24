@@ -3,6 +3,8 @@ const { success } = require('../utils/apiResponse');
 const { tripRouter } = require('./tripRoutes');
 const { activityRouter } = require('./activityRoutes');
 const { documentRouter } = require('./documentRoutes');
+const { placesRouter } = require('./placesRoutes');
+const { aiRouter } = require('./aiRoutes');
 
 const apiRouter = express.Router();
 
@@ -13,5 +15,7 @@ apiRouter.get('/health', (req, res) => {
 apiRouter.use('/trips', tripRouter);
 apiRouter.use('/trips/:tripId/activities', activityRouter);
 apiRouter.use('/trips/:tripId/documents', documentRouter);
+apiRouter.use('/places', placesRouter);
+apiRouter.use('/ai', aiRouter);
 
 module.exports = { apiRouter };

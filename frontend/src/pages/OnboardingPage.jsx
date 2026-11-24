@@ -116,20 +116,20 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
         {/* Hero Content */}
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 sm:pt-40 pb-24 text-center flex-1 flex flex-col items-center justify-center">
           
-          <h1 className="font-display font-medium text-4xl sm:text-6xl md:text-7xl lg:text-[80px] text-white tracking-tight leading-[1.08] drop-shadow-md">
+          <h1 className="font-display font-medium text-4xl sm:text-6xl md:text-7xl lg:text-[80px] text-white tracking-tight leading-[1.08] drop-shadow-md animate-fade-in-up">
             Roamly <span className="font-serif italic font-normal tracking-normal text-amber-200">Without Limits.</span><br />
             Discover beyond the ordinary.
           </h1>
 
-          <p className="max-w-2xl text-stone-200 text-sm sm:text-base md:text-lg mt-6 font-light leading-relaxed drop-shadow-sm">
+          <p className="max-w-2xl text-stone-200 text-sm sm:text-base md:text-lg mt-6 font-light leading-relaxed drop-shadow-sm animate-fade-in-up delay-200">
             Journeys shaped around you — your pace, your path, your sense of wonder.
             Every experience feels personal, effortless, and truly yours.
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
+          <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up delay-300">
             <button
               onClick={onOpenCreateTrip}
-              className="px-8 py-4 rounded-full bg-white hover:bg-stone-100 active:scale-95 text-slate-950 font-semibold text-sm sm:text-base transition-all duration-300 shadow-2xl hover:shadow-white/20 cursor-pointer"
+              className="px-8 py-4 rounded-full bg-white hover:bg-stone-100 hover:scale-105 active:scale-95 text-slate-950 font-semibold text-sm sm:text-base transition-all duration-300 shadow-2xl hover:shadow-white/25 cursor-pointer"
             >
               Build my trip now
             </button>
@@ -137,7 +137,7 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
             {trips.length > 0 && (
               <button
                 onClick={() => navigate('/trips')}
-                className="px-6 py-4 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-sm backdrop-blur-md transition-all border border-white/20 cursor-pointer flex items-center gap-2"
+                className="px-6 py-4 rounded-full bg-white/10 hover:bg-white/20 hover:scale-105 active:scale-95 text-white font-medium text-sm backdrop-blur-md transition-all border border-white/20 cursor-pointer flex items-center gap-2"
               >
                 <span>View My {trips.length} Trips</span>
                 <ArrowRight className="w-4 h-4" />
@@ -173,15 +173,15 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
                 <div
                   key={tour.id}
                   onClick={() => handlePlanTour(tour.destination)}
-                  className="group relative w-[280px] sm:w-[305px] h-[460px] sm:h-[480px] rounded-3xl overflow-hidden shrink-0 shadow-lg border border-stone-200/50 cursor-pointer snap-center scale-100 hover:scale-105 hover:shadow-2xl z-10 hover:z-20 transition-all duration-300 ease-out"
+                  className="group relative w-[280px] sm:w-[305px] h-[460px] sm:h-[480px] rounded-3xl overflow-hidden shrink-0 shadow-lg border border-stone-200/50 cursor-pointer snap-center smooth-card scale-100 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl z-10 hover:z-20 ease-out"
                 >
                   {/* Card Background Image */}
                   <img 
                     src={tour.image} 
                     alt={tour.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10 transition-opacity duration-300 group-hover:opacity-90" />
 
                   {/* Card Content Overlay */}
                   <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
@@ -202,7 +202,7 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
 
                     {/* Metadata Tags */}
                     <div className="flex items-center gap-2 mb-5">
-                      <span className={`text-[10px] font-bold px-3 py-1 rounded-full backdrop-blur-md ${tour.tagColor}`}>
+                      <span className={`text-[10px] font-bold px-3 py-1 rounded-full backdrop-blur-md ${tour.tagColor} transition-transform group-hover:scale-105`}>
                         {tour.tag}
                       </span>
                       <span className="text-[10px] font-medium px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-stone-200">
@@ -216,7 +216,7 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
                         e.stopPropagation();
                         handlePlanTour(tour.destination);
                       }}
-                      className="w-full py-3 rounded-full bg-white hover:bg-stone-100 active:scale-98 text-slate-950 font-bold text-xs tracking-wider uppercase transition-all shadow-md text-center cursor-pointer"
+                      className="w-full py-3 rounded-full bg-white hover:bg-stone-100 active:scale-95 text-slate-950 font-bold text-xs tracking-wider uppercase transition-all shadow-md group-hover:shadow-lg text-center cursor-pointer"
                     >
                       Explore
                     </button>
@@ -276,13 +276,17 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Card 1: Dark Tailor-Made AI Card */}
-          <div className="bg-[#0D131F] text-white rounded-3xl p-8 flex flex-col justify-between shadow-xl min-h-[360px]">
+          <div className="bg-[#0D131F] text-white rounded-3xl p-8 flex flex-col justify-between shadow-xl min-h-[360px] smooth-card hover:-translate-y-1 hover:shadow-2xl hover:border-slate-700/50 border border-transparent">
             <div>
               <div className="flex items-center justify-between mb-8">
                 <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-white">
-                  <Compass className="w-5 h-5" />
+                  <Compass className="w-5 h-5 animate-spin-slow" />
                 </div>
                 <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-stone-400">
+                  <span className="relative flex h-2 w-2 mr-0.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
                   <span>AI Co-pilot</span>
                   <div className="w-8 h-4 rounded-full bg-blue-600 p-0.5 flex items-center justify-end">
                     <div className="w-3 h-3 rounded-full bg-white" />
@@ -297,14 +301,14 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
 
             <button
               onClick={onOpenCreateTrip}
-              className="mt-8 w-full py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-98 text-white font-semibold text-xs tracking-wider uppercase transition-all border border-white/15 cursor-pointer"
+              className="mt-8 w-full py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 text-white font-semibold text-xs tracking-wider uppercase transition-all border border-white/15 cursor-pointer"
             >
               Tailor-Made
             </button>
           </div>
 
           {/* Card 2: Feature Photo Card ("Made for You") */}
-          <div className="relative rounded-3xl overflow-hidden min-h-[360px] shadow-xl group">
+          <div className="relative rounded-3xl overflow-hidden min-h-[360px] shadow-xl group smooth-card hover:-translate-y-1">
             <img 
               src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=800&q=80" 
               alt="Hiker with backpack" 
@@ -313,15 +317,15 @@ export default function OnboardingPage({ onOpenCreateTrip }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
             
             {/* Top Pill: "Made for You" */}
-            <div className="absolute top-6 left-1/2 transform -translate-x-1/2">
-              <span className="text-xs font-semibold px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md text-slate-900 shadow-md">
+            <div className="absolute top-6 left-1/2 transform -translate-x-1/2 animate-float">
+              <span className="text-xs font-semibold px-4 py-1.5 rounded-full bg-white/85 backdrop-blur-md text-slate-900 shadow-md">
                 Made for You
               </span>
             </div>
           </div>
 
           {/* Card 3: Experiences & Ratings Metric Card */}
-          <div className="bg-white rounded-3xl p-8 border border-stone-200/90 shadow-sm flex flex-col justify-between min-h-[360px]">
+          <div className="bg-white rounded-3xl p-8 border border-stone-200/90 shadow-sm flex flex-col justify-between min-h-[360px] smooth-card hover:-translate-y-1 hover:shadow-xl">
             <div>
               <span className="font-display font-extrabold text-5xl text-slate-900 tracking-tight">
                 50+

@@ -85,10 +85,10 @@ export default function Timeline({
                     <div 
                       key={activity._id}
                       onClick={() => onSelectActivity && onSelectActivity(activity)}
-                      className={`group relative bg-white rounded-2xl p-4 border transition-all duration-200 cursor-pointer ${
+                      className={`group relative bg-white rounded-2xl p-4 border transition-all duration-300 cursor-pointer ${
                         isSelected 
-                          ? 'border-brand-500 shadow-md ring-2 ring-brand-100' 
-                          : 'border-stone-200 hover:border-brand-300 hover:shadow-sm'
+                          ? 'border-brand-500 shadow-lg ring-2 ring-brand-100 scale-[1.01]' 
+                          : 'border-stone-200 hover:border-slate-800 hover:shadow-md hover:translate-x-1.5'
                       }`}
                     >
                       {/* Timeline dot marker */}
