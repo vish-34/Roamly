@@ -138,7 +138,7 @@ export default function TripWorkspacePage({ onOpenCreateTrip }) {
 
           <Link
             to={`/trips/${currentTrip._id}/ai`}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold transition-all shadow-xs hover:opacity-95"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-bold transition-all shadow-xs hover:opacity-95"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>AI Co-pilot</span>

@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { calculateTripBudget } = require('../src/services/budgetService');
 const { sortActivities } = require('../src/services/tripService');
+const { serializeTrip } = require('../src/services/tripService');
 
 test('budget keeps zero actual cost distinct from an unrecorded cost', () => {
   const result = calculateTripBudget({
@@ -30,4 +31,16 @@ test('activities are sorted on date then time without mutating the source', () =
   const sorted = sortActivities(activities);
   assert.deepEqual(sorted.map(({ date, time }) => `${date}T${time}`), ['2026-12-01T09:00', '2026-12-01T18:00', '2026-12-02T09:00']);
   assert.equal(activities[0].date, '2026-12-02');
+});
+
+test('trip responses expose destination cards with notes and rating fallbacks', () => {
+  const trip = {
+    totalBudget: 100,
+    activities: [{ _id: 'activity-1', name: 'Louvre', address: 'Paris', location: { lat: 48.86, lng: 2.34 }, rating: null, userRating: 5, notes: 'Book early', date: '2026-12-01', time: '10:00', estimatedCost: 20, actualCost: null }]
+  };
+  const result = serializeTrip(trip);
+  assert.deepEqual(result.destinationCards[0], {
+    id: 'activity-1', name: 'Louvre', address: 'Paris', location: { lat: 48.86, lng: 2.34 },
+    providerRating: null, userRating: 5, displayRating: 5, notes: 'Book early', googlePlaceId: undefined
+  });
 });

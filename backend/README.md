@@ -24,6 +24,7 @@ Express and MongoDB API for Roamly's travel-planning application. The frontend c
 ## Data and safeguards
 
 - MongoDB stores a trip with embedded, backend-sorted activities and document references.
+- Each trip response includes `destinationCards`, derived from saved activities, with place details, provider/user ratings, and user notes for the frontend card view.
 - Budget metrics are computed for every response and are never persisted as totals.
 - `actualCost: null` means unrecorded, while `actualCost: 0` means confirmed free.
 - Documents accept PDF, PNG, JPEG, and WebP only, with a 10 MB limit; file bytes stream to the `travel_docs` GridFS bucket.

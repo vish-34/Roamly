@@ -15,6 +15,17 @@ function serializeTrip(trip) {
   return {
     ...plainTrip,
     activities,
+    destinationCards: activities.map((activity) => ({
+      id: activity._id,
+      name: activity.name,
+      address: activity.address,
+      location: activity.location,
+      providerRating: activity.rating,
+      userRating: activity.userRating,
+      displayRating: activity.rating ?? activity.userRating,
+      notes: activity.notes,
+      googlePlaceId: activity.googlePlaceId
+    })),
     budget: calculateTripBudget({ totalBudget: plainTrip.totalBudget, activities })
   };
 }

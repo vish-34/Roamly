@@ -13,6 +13,7 @@ const activityFields = {
   address: z.string().trim().max(500).optional(),
   location: z.object({ lat: z.coerce.number().gte(-90).lte(90), lng: z.coerce.number().gte(-180).lte(180) }),
   rating: z.coerce.number().min(0).max(5).nullable().optional(),
+  userRating: z.coerce.number().min(1).max(5).nullable().optional(),
   date,
   time,
   notes: z.string().max(5000).optional(),

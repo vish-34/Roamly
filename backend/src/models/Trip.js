@@ -10,6 +10,7 @@ const ActivitySchema = new mongoose.Schema(
       lng: { type: Number, required: true }
     },
     rating: { type: Number, default: null, min: 0, max: 5 },
+    userRating: { type: Number, default: null, min: 1, max: 5 },
     date: { type: String, required: true },
     time: { type: String, required: true },
     notes: { type: String, default: '' },
