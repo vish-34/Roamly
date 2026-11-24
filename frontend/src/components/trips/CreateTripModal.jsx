@@ -8,7 +8,8 @@ import {
   Sparkles,
   Loader2,
   ArrowRight,
-  Compass
+  Compass,
+  ChevronDown
 } from 'lucide-react';
 import Modal from '../common/Modal';
 import { useTripContext } from '../../context/TripContext';
